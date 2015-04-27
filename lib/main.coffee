@@ -5,6 +5,9 @@ module.exports =
     openTipLink:
       type: 'boolean'
       default: true
+    displayOnLeft:
+      type: 'boolean'
+      default: false
 
   activate: ->
 

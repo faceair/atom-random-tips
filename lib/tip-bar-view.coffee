@@ -11,7 +11,10 @@ class TipBarView extends HTMLDivElement
     @handleEvents()
 
   attach: ->
-    @tile = @statusBar.addLeftTile(priority: 11, item: this)
+    if atom.config.get('random-tips.displayOnLeft')
+      @tile = @statusBar.addLeftTile(priority: 100, item: this)
+    else
+      @tile = @statusBar.addRightTile(priority: 100, item: this)
 
   handleEvents: ->
     @activeItemSubscription = atom.workspace.onDidChangeActivePaneItem =>
