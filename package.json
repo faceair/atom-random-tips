@@ -1,0 +1,24 @@
+{
+  "name": "random-tips",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "description": "Show random tips on the status bar",
+  "repository": "https://github.com/faceair/atom-random-tips",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "q": "^1.2.0",
+    "request": "^2.55.0",
+    "space-pen": "^5.1.1"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  }
+}
