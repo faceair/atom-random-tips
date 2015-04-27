@@ -30,19 +30,19 @@ class TipBarView extends HTMLDivElement
     @tile?.destroy()
 
   subscribeToActiveTextEditor: ->
-    @getRandomTip().done (tip) =>
-      @updateRandomTip tip
-
-  updateRandomTip: ({tip, index}) ->
     if @getActiveTextEditor()
-      if atom.config.get('random-tips.openTipLink')
-        @tipLink.href = "http://tips.hackplan.com/v1/#{index}"
-      else
-        @tipLink.href = '#'
-      @tipLink.textContent = tip
-      @style.display = ''
+      @getRandomTip().done (tip) =>
+        @updateRandomTip tip
     else
       @style.display = 'none'
+
+  updateRandomTip: ({tip, index}) ->
+    if atom.config.get('random-tips.openTipLink')
+      @tipLink.href = "http://tips.hackplan.com/v1/#{index}"
+    else
+      @tipLink.href = '#'
+    @tipLink.textContent = tip
+    @style.display = ''
 
   getRandomTip: ->
     Promise (resolve, reject) ->
