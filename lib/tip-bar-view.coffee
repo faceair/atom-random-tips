@@ -36,20 +36,31 @@ class TipBarView extends HTMLDivElement
     else
       @style.display = 'none'
 
-  updateRandomTip: ({tip, index}) ->
-    if atom.config.get('random-tips.openTipLink')
-      @tipLink.href = "http://tips.hackplan.com/v1/#{index}"
-    else
-      @tipLink.href = '#'
-    @tipLink.textContent = tip
+  updateRandomTip: ({text, link}) ->
+    @tipLink.href = link
+    @tipLink.textContent = text
     @style.display = ''
 
   getRandomTip: ->
     Promise (resolve, reject) ->
-      request 'http://tips.hackplan.com/?format=json', (err, res, body) ->
-        if err
-          reject err
+      switch atom.config.get('random-tips.source')
+        when 'Random Programming Tips'
+          request 'http://tips.hackplan.com/?format=json', (err, res, body) ->
+            return reject err if err
+            {tip, index} = JSON.parse body
+            resolve {
+              text: tip
+              link: "http://tips.hackplan.com/v1/#{index}"
+            }
+        when '一言（ヒトコト）'
+          request 'http://api.hitokoto.us/rand', (err, res, body) ->
+            return reject err if err
+            {id, hitokoto} = JSON.parse body
+            resolve {
+              text: hitokoto
+              link: "http://hitokoto.us/view/#{id}.html"
+            }
         else
-          resolve JSON.parse body
+          resolve()
 
 module.exports = document.registerElement('random-tips', prototype: TipBarView.prototype)

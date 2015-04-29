@@ -2,12 +2,13 @@ tipBar = null
 
 module.exports =
   config:
-    openTipLink:
-      type: 'boolean'
-      default: true
     displayOnLeft:
       type: 'boolean'
       default: false
+    source:
+      type: 'string'
+      default: 'Random Programming Tips'
+      enum: ['Random Programming Tips', '一言（ヒトコト）']
 
   activate: ->
 
