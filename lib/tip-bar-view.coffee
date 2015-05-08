@@ -46,20 +46,32 @@ class TipBarView extends HTMLDivElement
       switch atom.config.get('random-tips.source')
         when 'Random Programming Tips'
           request 'http://tips.hackplan.com/?format=json', (err, res, body) ->
-            return reject err if err
-            {tip, index} = JSON.parse body
-            resolve {
-              text: tip
-              link: "http://tips.hackplan.com/v1/#{index}"
-            }
+            if err
+              resolve {
+                text: 'Tip load error.'
+                link: '#'
+              }
+            else
+              {tip, index} = JSON.parse body
+              resolve {
+                text: tip
+                link: "http://tips.hackplan.com/v1/#{index}"
+              }
+
         when '一言（ヒトコト）'
           request 'http://api.hitokoto.us/rand', (err, res, body) ->
-            return reject err if err
-            {id, hitokoto} = JSON.parse body
-            resolve {
-              text: hitokoto
-              link: "http://hitokoto.us/view/#{id}.html"
-            }
+            if err
+              resolve {
+                text: 'Tip load error.'
+                link: '#'
+              }
+            else
+              {id, hitokoto} = JSON.parse body
+              resolve {
+                text: hitokoto
+                link: "http://hitokoto.us/view/#{id}.html"
+              }
+
         else
           resolve()
 

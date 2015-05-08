@@ -1,3 +1,3 @@
 # Random Tips
 
-Show [random tips](http://tips.hackplan.com/) on the status bar.
+Show random tips on the status bar.
