@@ -1,5 +1,4 @@
-request = require 'request'
-{Promise} = require 'q'
+fetch = require 'superfetch'
 
 class TipBarView extends HTMLDivElement
   initialize: (@statusBar) ->
@@ -30,49 +29,46 @@ class TipBarView extends HTMLDivElement
     @tile?.destroy()
 
   subscribeToActiveTextEditor: ->
-    if @getActiveTextEditor()
-      @getRandomTip().done (tip) =>
-        @updateRandomTip tip
-    else
-      @style.display = 'none'
+    unless @getActiveTextEditor()
+      return @style.display = 'none'
+
+    @getRandomTip()
+    .then (tip) =>
+      @updateRandomTip tip
+    .catch =>
+      @updateRandomTip {
+        text: 'Tip load error.'
+        link: 'https://github.com/faceair/atom-random-tips/issues'
+      }
 
   updateRandomTip: ({text, link}) ->
+    unless @getActiveTextEditor()
+      return @style.display = 'none'
+
     @tipLink.href = link
     @tipLink.textContent = text
-    @style.display = ''
+    @style.display  = ''
 
   getRandomTip: ->
-    Promise (resolve, reject) ->
-      switch atom.config.get('random-tips.source')
-        when 'Random Programming Tips'
-          request 'http://tips.hackplan.com/?format=json', (err, res, body) ->
-            if err
-              resolve {
-                text: 'Tip load error.'
-                link: '#'
-              }
-            else
-              {tip, index} = JSON.parse body
-              resolve {
-                text: tip
-                link: "http://tips.hackplan.com/v1/#{index}"
-              }
+    switch atom.config.get('random-tips.source')
 
-        when '一言（ヒトコト）'
-          request 'http://api.hitokoto.us/rand', (err, res, body) ->
-            if err
-              resolve {
-                text: 'Tip load error.'
-                link: '#'
-              }
-            else
-              {id, hitokoto} = JSON.parse body
-              resolve {
-                text: hitokoto
-                link: "http://hitokoto.us/view/#{id}.html"
-              }
+      when 'Random Programming Tips'
+        fetch.get 'http://tips.hackplan.com/?format=json'
+        .then (body) ->
+          {tip, index} = JSON.parse body
+          return {
+            text: tip
+            link: "http://tips.hackplan.com/v1/#{index}"
+          }
 
-        else
-          resolve()
+      when '一言（ヒトコト）'
+        fetch.get 'http://api.hitokoto.us/rand'
+        .then (body) ->
+          {id, hitokoto} = JSON.parse body
+
+          return {
+            text: hitokoto
+            link: "http://hitokoto.us/view/#{id}.html"
+          }
 
 module.exports = document.registerElement('random-tips', prototype: TipBarView.prototype)
