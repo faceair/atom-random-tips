@@ -1,7 +1,7 @@
 {
   "name": "random-tips",
   "main": "./lib/main",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Show random tips on the status bar",
   "repository": "https://github.com/faceair/atom-random-tips",
   "license": "MIT",
