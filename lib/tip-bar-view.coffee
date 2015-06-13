@@ -50,10 +50,13 @@ class TipBarView extends HTMLDivElement
     @style.display  = ''
 
   getRandomTip: ->
+    referer =
+      Referer: 'https://atom.io/packages/random-tips'
+
     switch atom.config.get('random-tips.source')
 
       when 'Random Programming Tips'
-        fetch.get 'http://tips.hackplan.com/?format=json'
+        fetch.get.header(referer) 'http://tips.hackplan.com/?format=json'
         .then (body) ->
           {tip, index} = JSON.parse body
           return {
@@ -62,7 +65,7 @@ class TipBarView extends HTMLDivElement
           }
 
       when '一言（ヒトコト）'
-        fetch.get 'http://api.hitokoto.us/rand'
+        fetch.get.header(referer) 'http://api.hitokoto.us/rand'
         .then (body) ->
           {id, hitokoto} = JSON.parse body
 
